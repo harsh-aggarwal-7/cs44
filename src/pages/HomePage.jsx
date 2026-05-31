@@ -40,29 +40,28 @@ export default function HomePage() {
       transition={{ duration: 0.3 }}
     >
       {/* Hero Section */}
-      <div className="text-center mb-8 pt-4">
+      <div className="text-center mb-10 pt-6">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
         >
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <Sparkles className="w-5 h-5 text-indigo-500" />
-            <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-full">
-              Community-Driven Knowledge Base
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 bg-indigo-500/5 dark:bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/15 dark:border-indigo-500/20">
+              ⚡ Institutional Knowledge Hub
             </span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 bg-clip-text text-transparent mb-3">
-            Get Answers. Share Knowledge.
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-500 dark:from-zinc-50 dark:via-zinc-100 dark:to-zinc-400 bg-clip-text text-transparent mb-4">
+            Get Answers. Share Expertise.
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
-            Ask questions, get verified answers from the community. All answers are reviewed for quality before going public.
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+            A minimalist, high-speed space designed for engineers and students to resolve issues, archive solutions, and share knowledge instantly.
           </p>
         </motion.div>
       </div>
 
       {/* Category Pills */}
-      <div className="mb-6">
+      <div className="mb-8">
         <CategoryPills
           categories={categories}
           activeCategory={activeCategory}
@@ -74,25 +73,28 @@ export default function HomePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Feed */}
         <div className="lg:col-span-8">
-          {/* Sort Controls */}
-          <div className="flex items-center gap-2 mb-5">
-            {sortOptions.map((option) => {
-              const Icon = option.icon
-              return (
-                <button
-                  key={option.value}
-                  onClick={() => setActiveSort(option.value)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    activeSort === option.value
-                      ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                      : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">{option.label}</span>
-                </button>
-              )
-            })}
+          {/* Segmented Capsule Sort Controls */}
+          <div className="flex items-center mb-6">
+            <div className="bg-zinc-100/80 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/40 p-1 rounded-xl flex items-center gap-0.5 shadow-inner">
+              {sortOptions.map((option) => {
+                const Icon = option.icon
+                const isActive = activeSort === option.value
+                return (
+                  <button
+                    key={option.value}
+                    onClick={() => setActiveSort(option.value)}
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                      isActive
+                        ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 shadow-sm border border-zinc-200/50 dark:border-zinc-700/50'
+                        : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-300 border border-transparent'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{option.label}</span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
           <QuestionFeed questions={questions} loading={loading} />

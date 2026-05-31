@@ -7,40 +7,32 @@ const ToastContext = createContext(null);
 const toastConfig = {
   success: {
     icon: CheckCircle,
-    bg: 'bg-emerald-50 dark:bg-emerald-950/80',
-    border: 'border-emerald-200 dark:border-emerald-800',
-    iconColor: 'text-emerald-500 dark:text-emerald-400',
-    textColor: 'text-emerald-800 dark:text-emerald-200',
+    iconColor: 'text-emerald-500',
+    barColor: 'bg-emerald-500',
   },
   error: {
     icon: XCircle,
-    bg: 'bg-red-50 dark:bg-red-950/80',
-    border: 'border-red-200 dark:border-red-800',
-    iconColor: 'text-red-500 dark:text-red-400',
-    textColor: 'text-red-800 dark:text-red-200',
+    iconColor: 'text-red-500',
+    barColor: 'bg-red-500',
   },
   info: {
     icon: Info,
-    bg: 'bg-blue-50 dark:bg-blue-950/80',
-    border: 'border-blue-200 dark:border-blue-800',
-    iconColor: 'text-blue-500 dark:text-blue-400',
-    textColor: 'text-blue-800 dark:text-blue-200',
+    iconColor: 'text-indigo-500',
+    barColor: 'bg-indigo-500',
   },
   warning: {
     icon: AlertTriangle,
-    bg: 'bg-amber-50 dark:bg-amber-950/80',
-    border: 'border-amber-200 dark:border-amber-800',
-    iconColor: 'text-amber-500 dark:text-amber-400',
-    textColor: 'text-amber-800 dark:text-amber-200',
+    iconColor: 'text-amber-500',
+    barColor: 'bg-amber-500',
   },
 };
 
 const toastVariants = {
   initial: {
     opacity: 0,
-    x: 80,
+    x: 40,
     y: 0,
-    scale: 0.95,
+    scale: 0.96,
   },
   animate: {
     opacity: 1,
@@ -49,17 +41,17 @@ const toastVariants = {
     scale: 1,
     transition: {
       type: 'spring',
-      stiffness: 350,
-      damping: 25,
+      stiffness: 400,
+      damping: 24,
     },
   },
   exit: {
     opacity: 0,
-    x: 80,
+    x: 30,
     scale: 0.95,
     transition: {
-      duration: 0.2,
-      ease: 'easeIn',
+      duration: 0.15,
+      ease: 'easeOut',
     },
   },
 };
@@ -75,21 +67,25 @@ function ToastItem({ id, message, type, onClose }) {
       initial="initial"
       animate="animate"
       exit="exit"
-      className={`
-        flex items-start gap-3 w-80 p-4
-        ${config.bg} ${config.border}
-        border backdrop-blur-xl rounded-xl
-        shadow-lg shadow-black/5 dark:shadow-black/20
-      `}
+      className="relative overflow-hidden flex items-start gap-3 w-80 p-4 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 shadow-lg shadow-zinc-200/5 dark:shadow-black/40 backdrop-blur-md"
     >
-      <Icon size={20} className={`${config.iconColor} flex-shrink-0 mt-0.5`} />
-      <p className={`text-sm font-medium flex-1 ${config.textColor}`}>{message}</p>
+      {/* Dynamic thin countdown progress line */}
+      <motion.div
+        initial={{ width: '100%' }}
+        animate={{ width: '0%' }}
+        transition={{ duration: 4, ease: 'linear' }}
+        className={`absolute bottom-0 left-0 h-[2px] ${config.barColor}`}
+      />
+
+      <Icon size={18} className={`${config.iconColor} flex-shrink-0 mt-0.5`} />
+      <p className="text-xs font-semibold flex-1 text-zinc-800 dark:text-zinc-200 leading-normal">{message}</p>
+      
       <button
         onClick={() => onClose(id)}
-        className={`${config.textColor} opacity-60 hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5`}
+        className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-100 transition-colors flex-shrink-0 mt-0.5 cursor-pointer"
         aria-label="Dismiss toast"
       >
-        <X size={16} />
+        <X size={14} />
       </button>
     </motion.div>
   );

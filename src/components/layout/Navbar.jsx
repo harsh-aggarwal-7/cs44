@@ -46,16 +46,16 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/20 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-200/50 dark:border-zinc-800/50 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-xl shadow-sm shadow-zinc-100/20 dark:shadow-black/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left — Logo */}
-            <Link to="/" className="flex items-center gap-2 shrink-0">
+            <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
               <div className="relative">
-                <MessageCircle className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
-                <Sparkles className="w-3 h-3 text-violet-500 absolute -top-1 -right-1" />
+                <MessageCircle className="w-6 h-6 text-zinc-900 dark:text-zinc-50 group-hover:scale-105 transition-transform" />
+                <Sparkles className="w-3 h-3 text-indigo-500 absolute -top-1.5 -right-1.5" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+              <span className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
                 AnswerHub
               </span>
             </Link>
