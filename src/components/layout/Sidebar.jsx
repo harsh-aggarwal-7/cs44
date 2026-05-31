@@ -23,21 +23,22 @@ const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.08 },
+    transition: { staggerChildren: 0.05 },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, x: 20 },
-  show: { opacity: 1, x: 0 },
+  hidden: { opacity: 0, x: 10 },
+  show: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } },
 };
 
 function SidebarSection({ title, icon: Icon, children }) {
   return (
-    <div className="rounded-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 shadow-lg shadow-indigo-500/5 p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <Icon className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
-        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide">{title}</h3>
+    <div className="rounded-2xl bg-zinc-950/20 border border-white/5 dark:border-zinc-800/40 p-5 shadow-[0_0_40px_-15px_rgba(168,85,247,0.1)] relative overflow-hidden backdrop-blur-xl group/section">
+      <div className="absolute -top-10 -right-10 w-24 h-24 bg-purple-500/5 rounded-full blur-xl pointer-events-none group-hover/section:bg-purple-500/10 transition-colors duration-500" />
+      <div className="flex items-center gap-2 mb-4.5 border-b border-white/5 pb-3">
+        <Icon className="w-4 h-4 text-purple-400" />
+        <h3 className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest">{title}</h3>
       </div>
       {children}
     </div>
@@ -130,22 +131,22 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden lg:block w-80 shrink-0">
-      <div className="sticky top-20 space-y-5">
+      <div className="sticky top-24 space-y-5">
         {/* FAQ Quick Summary */}
         <SidebarSection title="FAQ Quick Summary" icon={BookOpen}>
-          <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-2">
+          <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-1.5">
             {faqItems.map((item) => (
               <motion.div key={item.id} variants={itemVariants}>
                 <Link
                   to={`/faq/${item.id}`}
-                  className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all duration-200 group"
+                  className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white/[0.01] hover:bg-white/[0.04] border border-transparent hover:border-white/5 transition-all duration-300 group"
                 >
-                  <span className="text-lg mt-0.5">{item.icon}</span>
+                  <span className="text-base mt-0.5 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">{item.icon}</span>
                   <div>
-                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    <p className="text-xs font-extrabold text-zinc-300 group-hover:text-purple-400 transition-colors">
                       {item.title}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">{item.description}</p>
+                    <p className="text-[10px] text-zinc-500 group-hover:text-zinc-400 transition-colors mt-0.5 line-clamp-1">{item.description}</p>
                   </div>
                 </Link>
               </motion.div>
@@ -158,36 +159,48 @@ export default function Sidebar() {
           {loading ? (
             <Skeleton />
           ) : topContributors.length === 0 ? (
-            <p className="text-xs text-slate-500 dark:text-slate-400">No contributors yet.</p>
+            <p className="text-[10px] text-zinc-500">No contributors yet.</p>
           ) : (
             <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-3">
-              {topContributors.map((contributor, idx) => (
-                <motion.div
-                  key={contributor.user_id}
-                  variants={itemVariants}
-                  className="flex items-center gap-3"
-                >
-                  <div className="relative">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-xs font-bold overflow-hidden">
-                      {contributor.avatar_url ? (
-                        <img src={contributor.avatar_url} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        contributor.full_name[0]?.toUpperCase()
+              {topContributors.map((contributor, idx) => {
+                // High-end leaderboard border rings based on rank
+                const rankRing =
+                  idx === 0
+                    ? 'border-2 border-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.4)]'
+                    : idx === 1
+                    ? 'border-2 border-zinc-300 shadow-[0_0_8px_rgba(212,212,216,0.3)]'
+                    : idx === 2
+                    ? 'border-2 border-amber-700 shadow-[0_0_6px_rgba(180,83,9,0.25)]'
+                    : 'border border-zinc-700';
+
+                return (
+                  <motion.div
+                    key={contributor.user_id}
+                    variants={itemVariants}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="relative">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-extrabold overflow-hidden bg-zinc-950 ${rankRing}`}>
+                        {contributor.avatar_url ? (
+                          <img src={contributor.avatar_url} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          contributor.full_name[0]?.toUpperCase()
+                        )}
+                      </div>
+                      {idx === 0 && (
+                        <Crown className="w-3.5 h-3.5 text-amber-400 absolute -top-2 -right-1 filter drop-shadow-[0_0_4px_rgba(245,158,11,0.5)]" />
                       )}
                     </div>
-                    {idx === 0 && (
-                      <Crown className="w-3.5 h-3.5 text-amber-400 absolute -top-1.5 -right-1" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{contributor.full_name}</p>
-                  </div>
-                  <span className="flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-full">
-                    <MessageCircle className="w-3 h-3" />
-                    {contributor.count}
-                  </span>
-                </motion.div>
-              ))}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-zinc-300 truncate">{contributor.full_name}</p>
+                    </div>
+                    <span className="flex items-center gap-1 text-[10px] font-bold text-purple-400 bg-purple-500/10 border border-purple-500/15 px-2.5 py-0.5 rounded-md shadow-sm">
+                      <MessageCircle className="w-3 h-3" />
+                      {contributor.count}
+                    </span>
+                  </motion.div>
+                );
+              })}
             </motion.div>
           )}
         </SidebarSection>
@@ -197,22 +210,22 @@ export default function Sidebar() {
           {loading ? (
             <Skeleton />
           ) : trendingQuestions.length === 0 ? (
-            <p className="text-xs text-slate-500 dark:text-slate-400">No trending questions yet.</p>
+            <p className="text-[10px] text-zinc-500">No trending questions yet.</p>
           ) : (
-            <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-2">
+            <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-1">
               {trendingQuestions.map((q) => (
                 <motion.div key={q.id} variants={itemVariants}>
                   <Link
                     to={`/question/${q.id}`}
-                    className="flex items-start gap-2 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group"
+                    className="flex items-start gap-2 p-2 rounded-xl bg-white/[0.01] hover:bg-white/[0.04] border border-transparent hover:border-white/5 transition-all duration-300 group"
                   >
-                    <TrendingUp className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
+                    <TrendingUp className="w-3.5 h-3.5 text-purple-400 mt-0.5 shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 leading-snug">
+                      <p className="text-xs font-bold text-zinc-300 group-hover:text-purple-400 transition-colors line-clamp-2 leading-relaxed">
                         {q.title}
                       </p>
-                      <span className="flex items-center gap-1 text-xs text-slate-400 mt-1">
-                        <Eye className="w-3 h-3" />
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-zinc-500 mt-1.5 uppercase tracking-wide">
+                        <Eye className="w-3 h-3 text-zinc-600" />
                         {q.views || 0} views
                       </span>
                     </div>
@@ -228,17 +241,17 @@ export default function Sidebar() {
           {loading ? (
             <Skeleton />
           ) : mostSearched.length === 0 ? (
-            <p className="text-xs text-slate-500 dark:text-slate-400">No search data yet.</p>
+            <p className="text-[10px] text-zinc-500">No search data yet.</p>
           ) : (
-            <motion.div variants={containerVariants} initial="hidden" animate="show" className="flex flex-wrap gap-2">
+            <motion.div variants={containerVariants} initial="hidden" animate="show" className="flex flex-wrap gap-1.5 pt-1">
               {mostSearched.map((item) => (
                 <motion.div key={item.term} variants={itemVariants}>
                   <Link
                     to={`/search?q=${encodeURIComponent(item.term)}`}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 hover:text-indigo-700 dark:hover:text-indigo-300 transition-all duration-200"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold bg-white/[0.02] border border-white/5 text-zinc-400 hover:text-purple-300 hover:border-purple-500/25 transition-all duration-300 shadow-inner"
                   >
                     {item.term}
-                    <span className="text-slate-400 dark:text-slate-500">({item.count})</span>
+                    <span className="text-[9px] text-zinc-600">({item.count})</span>
                   </Link>
                 </motion.div>
               ))}
