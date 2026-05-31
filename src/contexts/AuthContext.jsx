@@ -8,6 +8,18 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  // Global Fail-Safe loading watchdog: guarantees that the loading spinner
+  // can never lock the interface for more than 3.5 seconds under any circumstance.
+  useEffect(() => {
+    if (loading) {
+      const failSafeTimer = setTimeout(() => {
+        console.warn('AnswerHub Auth Fail-Safe: Loading was stuck for 3.5s. Forcefully disabling loading screen to restore interactivity.');
+        setLoading(false);
+      }, 3500);
+      return () => clearTimeout(failSafeTimer);
+    }
+  }, [loading]);
+
   /**
    * Fetch the user profile from the users table.
    */
@@ -188,18 +200,23 @@ export function AuthProvider({ children }) {
         try {
           if (event === 'SIGNED_IN' && newSession?.user) {
             currentUserId = newSession.user.id
-            setLoading(true)
-            const profile = await fetchUserProfile(newSession.user.id, newSession.user)
-            if (mounted && currentUserId === newSession.user.id) {
-              if (!profile) {
-                console.warn('AnswerHub Auth: SIGNED_IN session is invalid (profile not found/creatable). Force signing out to clean local storage.')
-                await supabase.auth.signOut()
-                setUser(null)
-                setSession(null)
-              } else {
-                setUser(profile)
-                console.log('AnswerHub Auth: User signed in successfully. Profile loaded.')
+            // Only show loading and fetch profile if the user profile isn't already loaded in memory
+            if (!user || user.id !== newSession.user.id) {
+              setLoading(true)
+              const profile = await fetchUserProfile(newSession.user.id, newSession.user)
+              if (mounted && currentUserId === newSession.user.id) {
+                if (!profile) {
+                  console.warn('AnswerHub Auth: SIGNED_IN session is invalid (profile not found/creatable). Force signing out to clean local storage.')
+                  await supabase.auth.signOut()
+                  setUser(null)
+                  setSession(null)
+                } else {
+                  setUser(profile)
+                  console.log('AnswerHub Auth: User signed in successfully. Profile loaded.')
+                }
               }
+            } else {
+              console.log('AnswerHub Auth: SIGNED_IN event received, but user profile is already loaded in memory. Skipping redundant fetch.')
             }
           } else if (event === 'SIGNED_OUT') {
             currentUserId = null
