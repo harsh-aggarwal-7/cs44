@@ -98,19 +98,19 @@ export default function Navbar() {
                           animate={{ opacity: 1, scale: 1, y: 0 }}
                           exit={{ opacity: 0, scale: 0.95, y: -4 }}
                           transition={{ duration: 0.15 }}
-                          className="absolute right-0 mt-2 w-56 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 py-1 z-50"
+                          className="absolute right-0 mt-2 w-56 rounded-xl bg-white dark:bg-zinc-950/95 border border-slate-200 dark:border-zinc-800 shadow-xl shadow-slate-200/50 dark:shadow-black/40 backdrop-blur-xl py-1 z-50"
                         >
-                          <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700">
+                          <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800/80">
                             <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
                               {user.name || 'User'}
                             </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email}</p>
+                            <p className="text-xs text-slate-500 dark:text-zinc-400 truncate">{user.email}</p>
                           </div>
 
                           <Link
                             to="/profile"
                             onClick={() => setProfileOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-zinc-900/55 transition-colors"
                           >
                             <User className="w-4 h-4" /> My Profile
                           </Link>
@@ -118,15 +118,15 @@ export default function Navbar() {
                             <Link
                               to="/admin"
                               onClick={() => setProfileOpen(false)}
-                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-zinc-900/55 transition-colors"
                             >
                               <LayoutDashboard className="w-4 h-4" /> Admin Dashboard
                             </Link>
                           )}
-                          <div className="border-t border-slate-100 dark:border-slate-700 mt-1">
+                          <div className="border-t border-slate-100 dark:border-zinc-800/80 mt-1">
                             <button
                               onClick={handleSignOut}
-                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors w-full"
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors w-full"
                             >
                               <LogOut className="w-4 h-4" /> Sign Out
                             </button>
@@ -184,7 +184,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-72 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 shadow-2xl md:hidden overflow-y-auto"
+              className="fixed top-0 right-0 bottom-0 z-50 w-72 bg-white dark:bg-zinc-950 border-l border-slate-200 dark:border-zinc-800 shadow-2xl md:hidden overflow-y-auto"
             >
               <div className="p-4 space-y-4">
                 <div className="flex justify-end">
@@ -201,7 +201,7 @@ export default function Navbar() {
                       <Plus className="w-4 h-4" /> Ask Question
                     </Link>
 
-                    <div className="border-t border-slate-200 dark:border-slate-700 pt-4 space-y-1">
+                    <div className="border-t border-slate-200 dark:border-zinc-800 pt-4 space-y-1">
                       <div className="flex items-center gap-3 px-4 mb-3">
                         <Avatar src={user.avatar} name={user.name || 'User'} size="sm" />
                         <div>
@@ -209,15 +209,15 @@ export default function Navbar() {
                           <p className="text-xs text-slate-500">{user.email}</p>
                         </div>
                       </div>
-                      <Link to="/profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">
+                      <Link to="/profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-900 rounded-xl">
                         <User className="w-4 h-4" /> My Profile
                       </Link>
                       {isAdmin && (
-                        <Link to="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">
+                        <Link to="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-900 rounded-xl">
                           <LayoutDashboard className="w-4 h-4" /> Admin Dashboard
                         </Link>
                       )}
-                      <button onClick={() => { handleSignOut(); setMobileOpen(false) }} className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl w-full">
+                      <button onClick={() => { handleSignOut(); setMobileOpen(false) }} className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl w-full">
                         <LogOut className="w-4 h-4" /> Sign Out
                       </button>
                     </div>

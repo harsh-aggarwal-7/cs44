@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -8,6 +9,9 @@ import {
   Paperclip,
   CheckCircle2,
 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/components/ui/Toast';
+import { useUpvote } from '@/hooks/useUpvote';
 
 function formatTimeAgo(dateStr) {
   if (!dateStr) return '';
@@ -33,7 +37,7 @@ export default function QuestionCard({ question, index = 0 }) {
     description,
     category,
     tags,
-    vote_count = 0,
+    upvotes = 0,
     answer_count = 0,
     views = 0,
     has_verified_answer,
@@ -41,6 +45,41 @@ export default function QuestionCard({ question, index = 0 }) {
     created_at,
     users,
   } = question;
+
+  const { user } = useAuth();
+  const { showToast } = useToast();
+  const { toggleQuestionUpvote, hasUpvotedQuestion } = useUpvote();
+
+  const [upvoted, setUpvoted] = useState(false);
+  const [localUpvotes, setLocalUpvotes] = useState(upvotes || 0);
+
+  useEffect(() => {
+    setLocalUpvotes(upvotes || 0);
+  }, [upvotes]);
+
+  useEffect(() => {
+    if (user) {
+      hasUpvotedQuestion(id).then(setUpvoted);
+    } else {
+      setUpvoted(false);
+    }
+  }, [id, user, hasUpvotedQuestion]);
+
+  const handleUpvote = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      showToast('Please sign in to upvote', 'info');
+      return;
+    }
+    try {
+      await toggleQuestionUpvote(id);
+      setUpvoted(!upvoted);
+      setLocalUpvotes((prev) => (upvoted ? prev - 1 : prev + 1));
+    } catch (err) {
+      console.error('Upvote error:', err);
+    }
+  };
 
   const author = users || question.author || {};
   const parsedTags = typeof tags === 'string' ? tags.split(',').map((t) => t.trim()).filter(Boolean) : Array.isArray(tags) ? tags : [];
@@ -50,16 +89,26 @@ export default function QuestionCard({ question, index = 0 }) {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: index * 0.03 }}
-      whileHover={{ y: -2 }}
-      className="group"
+      whileHover={{ y: -3.5, scale: 1.005 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+      className="group block"
     >
-      <div className="flex gap-4 p-5 rounded-2xl bg-white/70 dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/60 shadow-sm hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-md hover:shadow-zinc-200/5 dark:hover:shadow-black/20 transition-all duration-300">
+      <div className="flex gap-4 p-5 rounded-2xl bg-white/70 dark:bg-zinc-900/40 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/60 shadow-sm hover:border-indigo-500/30 dark:hover:border-purple-500/35 hover:shadow-lg dark:hover:shadow-[0_0_30px_-5px_rgba(168,85,247,0.15)] transition-all duration-300">
         {/* Vote column */}
         <div className="flex flex-col items-center gap-1 shrink-0 pt-1">
-          <button className="p-1 rounded-lg text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-all duration-200 cursor-pointer">
-            <ChevronUp className="w-5 h-5" />
+          <button
+            onClick={handleUpvote}
+            className={`p-1 rounded-lg transition-all duration-200 cursor-pointer ${
+              upvoted
+                ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-500/10'
+                : 'text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/80'
+            }`}
+          >
+            <ChevronUp className={`w-5 h-5 transition-transform ${upvoted ? 'scale-110 stroke-[3px]' : ''}`} />
           </button>
-          <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">{vote_count}</span>
+          <span className={`text-sm font-bold transition-colors ${upvoted ? 'text-indigo-600 dark:text-indigo-400' : 'text-zinc-700 dark:text-zinc-300'}`}>
+            {localUpvotes}
+          </span>
         </div>
 
         {/* Main content */}

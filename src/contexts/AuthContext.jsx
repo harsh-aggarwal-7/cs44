@@ -67,19 +67,22 @@ export function AuthProvider({ children }) {
     let currentUserId = null // Prevent async race conditions
     console.log('AnswerHub Auth: Initializing auth subscriber...')
 
-    // Watchdog timer: if loading is stuck at true for more than 3 seconds, auto-heal and reload (up to 2 times).
+    // Watchdog timer: if loading is stuck at true for more than 4.5 seconds,
+    // it indicates a corrupted session or token refresh hang in localStorage.
+    // We self-heal by clearing localStorage auth keys and performing a one-time recovery reload.
     const watchdog = setTimeout(() => {
       if (mounted) {
-        console.warn('AnswerHub Auth: Loading stuck for 3s. Force clearing auth keys and reloading page to recover...')
+        console.warn('AnswerHub Auth: Session loading stuck for 4.5s. Healing corrupted localStorage auth tokens...')
         if (typeof window !== 'undefined') {
           try {
-            // Check session storage reload counter to prevent infinite loops during offline/server-downtime states
-            const reloadCountStr = sessionStorage.getItem('answerhub-auth-watchdog-reloads') || '0'
+            const reloadCountStr = sessionStorage.getItem('answerhub-auth-recovery-reloads') || '0'
             const reloadCount = parseInt(reloadCountStr, 10)
 
-            if (reloadCount < 2) {
-              sessionStorage.setItem('answerhub-auth-watchdog-reloads', (reloadCount + 1).toString())
+            if (reloadCount < 1) {
+              // Store reload count so we only attempt recovery once
+              sessionStorage.setItem('answerhub-auth-recovery-reloads', '1')
 
+              // Clear all Supabase auth keys
               const keysToRemove = []
               for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i)
@@ -88,19 +91,20 @@ export function AuthProvider({ children }) {
                 }
               }
               keysToRemove.forEach(key => localStorage.removeItem(key))
+
+              console.log('AnswerHub Auth: Corrupted keys purged. Re-initializing auth client...')
               window.location.reload()
             } else {
-              console.error('AnswerHub Auth: Watchdog reload limit reached. Halting auto-reload to prevent infinite loop.')
-              // Graceful fallback: stop loading so page renders offline state or fallback content
+              console.error('AnswerHub Auth: Recovery reload already attempted. Halting reload to avoid loop.')
               setLoading(false)
             }
           } catch (e) {
-            console.error('Failed to auto-heal and reload:', e)
+            console.error('Failed to execute recovery reload:', e)
             setLoading(false)
           }
         }
       }
-    }, 3000)
+    }, 4500)
 
     // Get initial session
     const getInitialSession = async () => {
@@ -161,7 +165,7 @@ export function AuthProvider({ children }) {
         if (mounted) {
           clearTimeout(watchdog)
           try {
-            sessionStorage.removeItem('answerhub-auth-watchdog-reloads')
+            sessionStorage.removeItem('answerhub-auth-recovery-reloads')
           } catch (e) {}
           setLoading(false)
           console.log('AnswerHub Auth: Initial session load complete. Loading set to false.')

@@ -15,7 +15,7 @@ const particles = Array.from({ length: 12 }, (_, i) => ({
 
 export default function Layout({ children, showSidebar = false }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[#05050f] text-zinc-50 relative overflow-hidden transition-colors duration-500">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#05050f] text-slate-900 dark:text-zinc-50 relative overflow-hidden transition-colors duration-500">
       
       {/* Immersive glowing nebula dust spots */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-20">

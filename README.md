@@ -2,6 +2,8 @@
 
 AnswerHub is a complete, production-ready, community-driven Q&A and FAQ platform designed for institutional portals and university hubs. Built with **React 19**, **Vite**, **Tailwind CSS v4**, and **Supabase**, it features a secure role-based access control system and a unique moderated answer pipeline to ensure content quality and institutional integrity.
 
+Now redesigned with a state-of-the-art **Obsidian (Deep Dark) & Paper (Pristine Light) Developer Aesthetic** showcasing floating celestial dust particles, self-drawing SVG animations, dynamic responsive themes, and high-fidelity spring transitions.
+
 ---
 
 ## 🌟 Key Product Features
@@ -23,10 +25,14 @@ AnswerHub is a complete, production-ready, community-driven Q&A and FAQ platform
 *   An inline, automatic spam analyzer scans answers upon submission for repeated characters, excessive URLs, promotional keywords, and excessive uppercase letters.
 *   Flagged answers are automatically redirected to the admin moderation queue as `spam`, preserving feed hygiene.
 
-### 🎨 Premium Dark/Light UI System
-*   Curated Indigo/Violet color palette with advanced glassmorphism cards (`backdrop-blur-xl bg-white/80`).
-*   Smooth micro-interactions powered by **Framer Motion** (animated counts, layout reflows, page transitions).
-*   Built-in theme toggle with `localStorage` state persistence.
+### 🎨 State-of-the-Art Obsidian & Paper Developer Theme
+*   **Tactile Spring Physics:** Smooth spring-dampened motion transitions powered by **Framer Motion** applied to active routes, feed cards, mobile drawers, and profile selectors.
+*   **Floating Particle Backdrops:** A floating cosmic particle emitter inside `Layout.jsx` organically drifts glowing sparkles across the viewport in front of slow-breathing purple/indigo ambient nebulas.
+*   **Self-Drawing SVG Toasts:** The slide-in toast notification system features custom inline SVGs that dynamically sketch out success, error, warning, or info vectors when rendered, overlaying frosted glassmorphic containers.
+*   **Responsive Theme Toggling:** A localStorage-persisted dark/light switch dynamically re-renders all layout properties (`bg-slate-50 dark:bg-[#05050f] text-slate-900 dark:text-zinc-50`), inputs, checkmarks, checkboxes, and sidebars for complete readability.
+*   **Robust Network Safeguards:** 
+    *   *Global Fetch Timeout:* Intercepts all client-level Supabase network calls using native browser `AbortController` signals to abort hanging requests after 5 seconds, preventing connection pools from exhausting and locking skeleton loaders.
+    *   *One-Time Auto-Healing Recovery Watchdog:* Safely clears corrupted localStorage session tokens and performs a single-instance recovery reload if initialized session fetches remain stuck for over 4.5 seconds.
 
 ---
 
