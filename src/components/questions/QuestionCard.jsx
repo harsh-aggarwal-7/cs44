@@ -186,15 +186,25 @@ export default function QuestionCard({ question, index = 0 }) {
 
         {/* Author avatar */}
         <div className="hidden sm:flex flex-col items-center justify-start shrink-0 pt-1">
-          <Link to={`/profile/${author.id || ''}`} className="group/avatar" title={author.name || 'Anonymous'}>
-            <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 text-xs font-bold overflow-hidden border border-zinc-200 dark:border-zinc-700 transition-all">
+          {user && author.id === user.id ? (
+            <Link to="/profile" className="group/avatar" title={`${author.name || 'Anonymous'} (You)`}>
+              <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 text-xs font-bold overflow-hidden border border-zinc-200 dark:border-zinc-700 hover:border-indigo-500/50 dark:hover:border-purple-500/50 transition-all">
+                {author.avatar ? (
+                  <img src={author.avatar} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  (author.name?.[0] || '?').toUpperCase()
+                )}
+              </div>
+            </Link>
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 text-xs font-bold overflow-hidden border border-zinc-200 dark:border-zinc-700 transition-all" title={author.name || 'Anonymous'}>
               {author.avatar ? (
                 <img src={author.avatar} alt="" className="w-full h-full object-cover" />
               ) : (
                 (author.name?.[0] || '?').toUpperCase()
               )}
             </div>
-          </Link>
+          )}
         </div>
       </div>
     </motion.div>
