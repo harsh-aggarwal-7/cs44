@@ -39,10 +39,10 @@ export default function QuestionCard({ question, index = 0 }) {
     has_verified_answer,
     has_attachment,
     created_at,
-    profiles,
+    users,
   } = question;
 
-  const author = profiles || question.author || {};
+  const author = users || question.author || {};
   const parsedTags = typeof tags === 'string' ? tags.split(',').map((t) => t.trim()).filter(Boolean) : Array.isArray(tags) ? tags : [];
 
   return (
@@ -137,12 +137,12 @@ export default function QuestionCard({ question, index = 0 }) {
 
         {/* Author avatar */}
         <div className="hidden sm:flex flex-col items-center justify-start shrink-0 pt-1">
-          <Link to={`/profile/${author.id || ''}`} className="group/avatar" title={author.full_name || 'Anonymous'}>
+          <Link to={`/profile/${author.id || ''}`} className="group/avatar" title={author.name || 'Anonymous'}>
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-xs font-bold overflow-hidden ring-2 ring-transparent group-hover/avatar:ring-indigo-300 dark:group-hover/avatar:ring-indigo-600 transition-all">
-              {author.avatar_url ? (
-                <img src={author.avatar_url} alt="" className="w-full h-full object-cover" />
+              {author.avatar ? (
+                <img src={author.avatar} alt="" className="w-full h-full object-cover" />
               ) : (
-                (author.full_name?.[0] || '?').toUpperCase()
+                (author.name?.[0] || '?').toUpperCase()
               )}
             </div>
           </Link>

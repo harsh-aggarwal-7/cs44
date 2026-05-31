@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage'
 import QuestionDetailPage from './pages/QuestionDetailPage'
 import AskQuestionPage from './pages/AskQuestionPage'
 import SearchPage from './pages/SearchPage'
+import FaqPage from './pages/FaqPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
@@ -33,6 +34,8 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/question/:id" element={<QuestionDetailPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/faq" element={<FaqPage />} />
+          <Route path="/faq/:id" element={<FaqPage />} />
 
           <Route path="/ask" element={
             <ProtectedRoute>

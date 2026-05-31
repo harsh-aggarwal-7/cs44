@@ -61,18 +61,18 @@ export default function Sidebar() {
       // Top contributors - users with most verified answers
       const { data: contributors } = await supabase
         .from('answers')
-        .select('user_id, profiles(full_name, avatar_url)')
+        .select('user_id, users:user_id (name, avatar)')
         .eq('verification_status', 'verified')
         .limit(100);
 
       if (contributors) {
         const countMap = {};
-        contributors.forEach(({ user_id, profiles }) => {
+        contributors.forEach(({ user_id, users }) => {
           if (!countMap[user_id]) {
             countMap[user_id] = {
               user_id,
-              full_name: profiles?.full_name || 'Anonymous',
-              avatar_url: profiles?.avatar_url,
+              full_name: users?.name || 'Anonymous',
+              avatar_url: users?.avatar,
               count: 0,
             };
           }
