@@ -17,7 +17,7 @@
 
 <br />
 
-**A production-grade, community-driven Q&A and FAQ platform** engineered for institutional portals, university hubs, and knowledge-sharing communities. Featuring a moderated answer pipeline, reputation & badge gamification, AI-powered summaries, OCR extraction, multi-language translation, voice-enabled search, text-to-speech accessibility, real-time leaderboards, bookmarks, and a cinematic dark/light developer aesthetic.
+**A production-grade, community-driven Q&A and FAQ platform** engineered for institutional portals, university hubs, and knowledge-sharing communities. Featuring a moderated answer pipeline, reputation & badge gamification, AI-powered summaries, multi-language translation, voice-enabled search, text-to-speech accessibility, real-time leaderboards, and a cinematic dark/light developer aesthetic.
 
 <br />
 
@@ -38,7 +38,7 @@
 ### 🔐 Role-Based Access Control
 Fine-grained RBAC with three permission tiers:
 - **Guest** — Browse verified answers, search, view FAQs
-- **User** — Ask questions, submit answers, upvote, bookmark, track notifications
+- **User** — Ask questions, submit answers, upvote, track notifications
 - **Admin** — Full moderation dashboard with bulk operations, metrics, flagging review, and content management
 
 </td>
@@ -111,28 +111,6 @@ Instant search suggestions as you type:
 </td>
 <td width="50%">
 
-### 📸 OCR (Optical Character Recognition)
-Extract text from images effortlessly:
-- Upload an image and **extract text automatically**
-- Use extracted text to populate question fields
-- Perfect for scanning handwritten notes, screenshots, or documents
-- Client-side processing for privacy
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🔖 Bookmarks
-Save questions for later reference:
-- **Bookmark any question** with a single click
-- Access all saved questions from your profile
-- Persistent across sessions
-- Quick-access bookmark management
-
-</td>
-<td width="50%">
-
 ### 🚩 Content Flagging
 Community-driven content moderation:
 - **Flag inappropriate questions or answers** for admin review
@@ -190,7 +168,6 @@ Never lose sight of your submissions:
 ### 🔑 Authentication System
 Flexible, secure authentication:
 - **Email/Password** sign-up and login
-- **🔵 Sign in with Google** — One-click OAuth authentication
 - **Forgot Password** — Email-based password reset flow
 - Session persistence across page refreshes
 - Automatic session recovery with watchdog timer
@@ -314,7 +291,7 @@ Every registered user gets a comprehensive profile showcasing:
 | 💬 **Answers Posted** | Total answers contributed |
 | ✅ **Accepted Answers** | Number of answers marked as accepted |
 | 📊 **Ranking Position** | Current leaderboard position |
-| 🔖 **Bookmarked Questions** | Saved questions for quick access |
+
 | 🎯 **Progress to Next Badge** | Visual progress bar |
 
 ---
@@ -328,16 +305,16 @@ Every registered user gets a comprehensive profile showcasing:
 │                         CLIENT (SPA)                             │
 │   React 19 · Vite 8 · Tailwind CSS v4 · Framer Motion 12        │
 ├────────┬────────┬────────┬────────┬────────┬────────┬────────────┤
-│  Auth  │Question│ Answer │ Search │ Voice  │  OCR   │ Translation│
-│Context │  Hook  │  Hook  │  Hook  │STT/TTS │Extract │   Engine   │
-├────────┴────────┴────────┴────────┴────────┴────────┴────────────┤
-│  Reputation Engine · Badge System · Leaderboard · Bookmarks      │
+│  Auth  │Question│ Answer │ Search │ Voice  │Translation│
+│Context │  Hook  │  Hook  │  Hook  │STT/TTS │  Engine   │
+├────────┴────────┴────────┴────────┴────────┴───────────┤
+│  Reputation Engine · Badge System · Leaderboard                  │
 ├──────────────────────────────────────────────────────────────────┤
 │               Supabase JS Client (v2.106+)                       │
-│         ┌──────────┬──────────┬──────────┬──────────┐            │
-│         │   Auth   │ Database │ Storage  │  OAuth   │            │
-│         │  (JWT)   │ (REST)   │ (S3-API) │ (Google) │            │
-└─────────┴──────────┴──────────┴──────────┴──────────┴────────────┘
+│              ┌──────────┬──────────┬──────────┐                  │
+│              │   Auth   │ Database │ Storage  │                  │
+│              │  (JWT)   │ (REST)   │ (S3-API) │                  │
+└──────────────┴──────────┴──────────┴──────────┴──────────────────┘
                             │
 ┌───────────────────────────┴──────────────────────────────────────┐
 │                      SUPABASE BACKEND                            │
@@ -383,19 +360,19 @@ Answerhub/
 │   │   ├── useSpeechToText.js     # 🎙️ Web Speech API (STT) hook
 │   │   ├── useTextToSpeech.js     # 🔊 SpeechSynthesis (TTS) hook
 │   │   └── useUpvote.js           # Optimistic upvote toggling
-│   ├── lib/                       # Utility functions & OCR engine
+│   ├── lib/                       # Utility functions
 │   ├── pages/
 │   │   ├── AdminDashboard.jsx     # Metrics, bulk moderation, flag queue
-│   │   ├── AskQuestionPage.jsx    # Question form with voice & OCR
+│   │   ├── AskQuestionPage.jsx    # Question form with voice dictation
 │   │   ├── FaqPage.jsx            # FAQ browser with STT & TTS
 │   │   ├── ForgotPasswordPage.jsx # Email-based password reset
 │   │   ├── HomePage.jsx           # Main feed with category filtering
-│   │   ├── LoginPage.jsx          # Email + Google OAuth login
+│   │   ├── LoginPage.jsx          # Email/password login
 │   │   ├── NotFoundPage.jsx       # Animated 404 page
-│   │   ├── ProfilePage.jsx        # Stats, reputation, badges, bookmarks
+│   │   ├── ProfilePage.jsx        # Stats, reputation, badges
 │   │   ├── QuestionDetailPage.jsx # Full question + answers + accepted
 │   │   ├── SearchPage.jsx         # Global search results
-│   │   └── SignupPage.jsx         # Registration with Google OAuth
+│   │   └── SignupPage.jsx         # User registration
 │   ├── App.jsx                    # Route definitions with AnimatePresence
 │   ├── main.jsx                   # App entry point
 │   └── index.css                  # Global styles & design tokens
@@ -418,12 +395,11 @@ Answerhub/
 | **Icons** | Lucide React | 1.17 | Consistent, tree-shakeable icon library |
 | **Forms** | React Hook Form | 7 | Performant form state management |
 | **Routing** | React Router | 7 | Client-side navigation with route guards |
-| **Backend & DB** | Supabase | PostgreSQL | Auth, Database, Storage, Realtime, OAuth |
+| **Backend & DB** | Supabase | PostgreSQL | Auth, Database, Storage, Realtime |
 | **Search Engine** | Fuse.js | 7 | Client-side fuzzy matching & similarity scoring |
 | **Voice Input** | Web Speech API | Native | Browser speech-to-text recognition |
 | **Audio Output** | SpeechSynthesis API | Native | Browser text-to-speech playback |
-| **OCR** | OCR Engine | Client-side | Image-to-text extraction |
-| **OAuth** | Google Sign-In | OAuth 2.0 | One-click social authentication |
+
 | **Deployment** | Vercel | — | Edge-optimized SPA hosting |
 
 ---
@@ -436,8 +412,8 @@ The PostgreSQL database is organized into **8+ core tables** with strict relatio
 ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
 │    auth.users     │────▶│      users       │     │    categories    │
 │  (Supabase Auth)  │     │  id, name, email │     │  id, name, icon  │
-│  + Google OAuth   │     │  role, avatar    │     └────────┬─────────┘
-└──────────────────┘     │  reputation, rank │              │
+└──────────────────┘     │  role, avatar    │     └────────┬─────────┘
+                          │  reputation, rank │              │
                           └───────┬──────────┘              │
                                   │                         │
                     ┌─────────────┼─────────────────────────┘
@@ -447,7 +423,7 @@ The PostgreSQL database is organized into **8+ core tables** with strict relatio
               │  id, title, description   │
               │  category, tags, views    │
               │  upvotes, attachment_url  │
-              │  bookmarks, flags         │
+              │  flags                    │
               └──────┬───────────┬───────┘
                      │           │
         ┌────────────▼──┐  ┌────▼───────────────┐
@@ -464,11 +440,11 @@ The PostgreSQL database is organized into **8+ core tables** with strict relatio
         │  user_id (PK)      │     │  message, is_read │
         └────────────────────┘     └──────────────────┘
 
-        ┌──────────────────────┐   ┌──────────────────┐
-        │  search_analytics    │   │    bookmarks      │
-        │  id, search_term,    │   │  user_id,         │
-        │  user_id, created_at │   │  question_id      │
-        └──────────────────────┘   └──────────────────┘
+        ┌──────────────────────┐
+        │  search_analytics    │
+        │  id, search_term,    │
+        │  user_id, created_at │
+        └──────────────────────┘
 ```
 
 ### Key Database Features
@@ -482,7 +458,7 @@ The PostgreSQL database is organized into **8+ core tables** with strict relatio
 | **Toggle Upvotes** | RPC functions atomically insert/delete upvote records and update counters |
 | **16+ RLS Policies** | Fine-grained row-level security ensuring users only access authorized data |
 | **Reputation Tracking** | Points calculated from user actions and stored for leaderboard rankings |
-| **Bookmark Persistence** | User bookmarks stored with composite keys for instant retrieval |
+
 
 ---
 
@@ -546,14 +522,7 @@ npm install
 2. Click **New Bucket** → name it `attachments`
 3. Toggle **Public Bucket** to **ON** → Click **Create**
 
-**4. Google OAuth Setup** *(Optional)*
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/) → Create a new project
-2. Navigate to **APIs & Services** → **Credentials** → **Create OAuth Client ID**
-3. Add your Supabase project URL to authorized redirect URIs
-4. In the Supabase Dashboard → **Authentication** → **Providers** → Enable **Google** and paste your Client ID & Secret
-
-**5. Environment Configuration**
+**4. Environment Configuration**
 
 ```bash
 cp .env.example .env
@@ -566,7 +535,7 @@ VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
-**6. Launch Development Server**
+**5. Launch Development Server**
 
 ```bash
 npm run dev
@@ -574,7 +543,7 @@ npm run dev
 
 Open [**http://localhost:5173**](http://localhost:5173) in your browser.
 
-**7. Production Build**
+**6. Production Build**
 
 ```bash
 npm run build
@@ -587,7 +556,7 @@ npm run preview     # Preview the production build locally
 
 To activate the admin moderation dashboard:
 
-1. **Create an account** on the running application via Sign Up (or Google Sign-In)
+1. **Create an account** on the running application via Sign Up
 2. Open the **Supabase Dashboard** → **Table Editor** → `users` table
 3. Locate your user row and change the `role` column from `user` to `admin`
 4. **Refresh your browser** — the **Admin** link will appear in the navigation bar
@@ -639,22 +608,19 @@ npx serve dist         # Serve locally for testing
 | 7 | 📈 Progress Tracker | Visual progress bars toward next badge |
 | 8 | 🎙️ Voice Search (Voice Chat) | Hands-free voice input across the platform |
 | 9 | 🔊 Text-to-Speech | Listen to questions and FAQ answers |
-| 10 | 📸 OCR | Extract text from images to populate questions |
-| 11 | 🌐 Translation | Multi-language translation for questions & answers |
-| 12 | 🔍 Type-Ahead | Autocomplete search suggestions as you type |
-| 13 | 🔖 Bookmarks | Save questions for later reference |
-| 14 | 🚩 Content Flagging | Flag inappropriate questions or answers |
-| 15 | 📍 Track Your Questions | Real-time status tracking for submissions |
-| 16 | 🔵 Google Sign-In | One-click OAuth authentication |
-| 17 | 🔑 Forgot Password | Email-based password reset flow |
-| 18 | 🧠 Duplicate Detection | Fuse.js fuzzy matching with similarity scores |
-| 19 | 🚫 Spam Detector | Heuristic auto-flagging of spam content |
-| 20 | 🔮 AI Summarizer | Client-side NLP extractive summaries |
-| 21 | 📎 File Attachments | Upload images and documents to questions/answers |
-| 22 | 🔔 Real-Time Notifications | In-app notification bell with live updates |
-| 23 | 🎨 Obsidian & Paper Themes | Cinematic dark/light theme system |
-| 24 | ✨ Spring-Physics Animations | Framer Motion transitions & micro-interactions |
-| 25 | 🌌 Cosmic Particle Backdrops | Floating particle emitter with ambient nebulas |
+| 10 | 🌐 Translation | Multi-language translation for questions & answers |
+| 11 | 🔍 Type-Ahead | Autocomplete search suggestions as you type |
+| 12 | 🚩 Content Flagging | Flag inappropriate questions or answers |
+| 13 | 📍 Track Your Questions | Real-time status tracking for submissions |
+| 14 | 🔑 Forgot Password | Email-based password reset flow |
+| 15 | 🧠 Duplicate Detection | Fuse.js fuzzy matching with similarity scores |
+| 16 | 🚫 Spam Detector | Heuristic auto-flagging of spam content |
+| 17 | 🔮 AI Summarizer | Client-side NLP extractive summaries |
+| 18 | 📎 File Attachments | Upload images and documents to questions/answers |
+| 19 | 🔔 Real-Time Notifications | In-app notification bell with live updates |
+| 20 | 🎨 Obsidian & Paper Themes | Cinematic dark/light theme system |
+| 21 | ✨ Spring-Physics Animations | Framer Motion transitions & micro-interactions |
+| 22 | 🌌 Cosmic Particle Backdrops | Floating particle emitter with ambient nebulas |
 
 ---
 
