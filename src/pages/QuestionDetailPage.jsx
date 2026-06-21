@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ChevronUp, Eye, Clock, Paperclip, ChevronRight, Home, Tag } from 'lucide-react'
+import { ChevronUp, Eye, Clock, Paperclip, ChevronRight, Home, Tag, Trash2 } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 import Avatar from '@/components/ui/Avatar'
 import Card from '@/components/ui/Card'
@@ -31,13 +31,26 @@ function timeAgo(dateString) {
 
 export default function QuestionDetailPage() {
   const { id } = useParams()
-  const { question, loading: qLoading, fetchQuestionById } = useQuestions()
+  const { question, loading: qLoading, fetchQuestionById, deleteQuestion } = useQuestions()
   const { answers, loading: aLoading, fetchAnswers, verifyAnswer, rejectAnswer, markSpam, deleteAnswer } = useAnswers()
   const { toggleQuestionUpvote, hasUpvotedQuestion } = useUpvote()
   const { user, isAdmin } = useAuth()
   const { showToast } = useToast()
+  const navigate = useNavigate()
   const [upvoted, setUpvoted] = useState(false)
   const [localUpvotes, setLocalUpvotes] = useState(0)
+
+  const handleQuestionDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this question? This will also delete all associated answers.")) {
+      try {
+        await deleteQuestion(question.id)
+        showToast('Question deleted successfully', 'info')
+        navigate('/')
+      } catch (err) {
+        showToast('Failed to delete question', 'error')
+      }
+    }
+  }
 
   useEffect(() => {
     if (id) {
@@ -222,6 +235,16 @@ export default function QuestionDetailPage() {
                   <Paperclip className="w-4 h-4" />
                   Attachment
                 </span>
+              )}
+              {(isAdmin || (user && user.id === question.user_id)) && (
+                <button
+                  onClick={handleQuestionDelete}
+                  className="flex items-center gap-1 text-sm text-red-500 hover:text-red-600 dark:hover:text-red-450 transition-colors font-semibold cursor-pointer"
+                  title="Delete Question"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete Question
+                </button>
               )}
               <div className="ml-auto flex items-center gap-2">
                 <Avatar
